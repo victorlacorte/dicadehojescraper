@@ -1,6 +1,6 @@
 import requests
 import sys
-from dicadehoje.client import downloadable_urls
+from utils.requests_utils import downloadable_urls
 from sensitive_info import *
 
 reports = f'{base_url}/carteira-dica-de-hoje-relatorios'
