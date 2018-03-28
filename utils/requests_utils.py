@@ -3,11 +3,6 @@ import os
 import requests
 
 
-# def file_like(url):
-#     _, ext = os.path.splitext(url)
-#     if ext:
-#         return True
-#     return False
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Type
 # https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
 def is_downloadable(url, session=None, mimes=['text/html']):
@@ -32,42 +27,6 @@ def is_downloadable(url, session=None, mimes=['text/html']):
         # so we negate the result to obtain the desired return value
         return not any(_ in content_type.lower() for _ in mimes)
     return False
-# TODO this algorithm is flawed by design: we need to expand URLs and consume
-#   them all to avoid repetition (
-# def url_expander(url, session, base_url=base_url, visited=[]):
-#     """
-#         :param base_url: retrict search scope to a specific domain
-#         :param visited: visited URLs
-#     """
-#     print(url)
-#     if base_url in url and url not in visited:
-#         visited.append(url)
-#         if file_like(url):
-#             yield url
-#         else:
-#             r = session.get(url)
-#             soup = BeautifulSoup(r.text, 'lxml')
-#             for link in soup.find_all('a'):
-#                 href = link.get('href')
-#                 if href:
-#                     yield from url_expander(href, session, base_url, visited)
-# def url_expander2(urls, session, base_url=base_url, visited=[]):
-#     while urls:
-#         url = urls.pop()
-#         print(url)
-#         if base_url in url and url not in visited:
-#             visited.append(url)
-#             # TODO improve this type of recognition
-#             if file_like(url):
-#                 yield url
-#             else:
-#                 r = session.get(url)
-#                 soup = BeautifulSoup(r.text, 'lxml')
-#                 for link in soup.find_all('a'):
-#                     href = link.get('href')
-#                     if href:
-#                         urls.add(href)
-#                 yield from url_expander2(urls, session, base_url, visited)
 def downloadable_urls(urls, session, domains, visited=[]):
     while urls:
         url = urls.pop()
@@ -97,3 +56,8 @@ def downloadable_urls(urls, session, domains, visited=[]):
                             urls.add(href)
                     yield from downloadable_urls(urls, session, domains,
                             visited)
+def download(url, saveas, stream=False, chunk_size=None):
+    r = requests.get(url, stream=stream)
+    with open(saveas, 'wb') as f:
+        for chunk in r.iter_content(chunk_size=chunk_size):
+            f.write(chunk)
