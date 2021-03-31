@@ -3,6 +3,6 @@ certifi==2018.1.18
 chardet==3.0.4
 -e git+https://github.com/victorlacorte/dicadehojescraper.git@a274b3cdf74826b58b8d23a43a7ca319ce4d7e70#egg=dicadehoje
 idna==2.6
-lxml==4.2.1
+lxml==4.6.3
 requests==2.18.4
 urllib3==1.22
